@@ -112,12 +112,12 @@ TextureImporter:
       name: helicopter-spritesheet_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 458
-        width: 418
-        height: 133
+        x: 0
+        y: 450
+        width: 423
+        height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: helicopter-spritesheet_1
       rect:
         serializedVersion: 2
-        x: 2
-        y: 308
-        width: 342
-        height: 133
+        x: 0
+        y: 300
+        width: 423
+        height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -156,12 +156,12 @@ TextureImporter:
       name: helicopter-spritesheet_2
       rect:
         serializedVersion: 2
-        x: 2
-        y: 158
-        width: 342
-        height: 133
+        x: 0
+        y: 150
+        width: 423
+        height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -178,12 +178,12 @@ TextureImporter:
       name: helicopter-spritesheet_3
       rect:
         serializedVersion: 2
-        x: 2
-        y: 8
-        width: 342
-        height: 133
+        x: 0
+        y: 0
+        width: 423
+        height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -200,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 797f84bff1a6345829514458945d2d30
     internalID: 0
     vertices: []
     indices: 
@@ -208,7 +208,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       helicopter-spritesheet_0: 612109370007136323
       helicopter-spritesheet_1: -9020638304655142607
