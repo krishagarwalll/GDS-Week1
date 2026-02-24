@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
     public TMP_Text soldiersRescuedText;
     public TMP_Text messageText;
 
+    [Header("Sound")]
+    public AudioClip pickupSound;
+    private AudioSource audioSource;
+
     private int soldiersInHelicopter = 0;
     private int soldiersRescued = 0;
 
@@ -22,21 +26,25 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
         messageText.text = "";
+
+        // Get AudioSource from helicopter
+        if (helicopter != null)
+            audioSource = helicopter.GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        // Reset game at any time
+        // Reset game
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
-    // Called by HelicopterCollisionForwarder
+    // Called from HelicopterCollisionForwarder
     public void HandleCollision(GameObject other)
     {
-        if (gameEnded) return; // stop processing collisions after game ends
+        if (gameEnded) return; // Stop processing after game ends
 
         if (other.CompareTag("Soldier"))
         {
@@ -44,8 +52,11 @@ public class GameManager : MonoBehaviour
             {
                 soldiersInHelicopter++;
                 UpdateUI();
-                Destroy(other); // remove soldier
-                // Play pickup sound here if needed
+                Destroy(other);
+
+                // Play pickup sound
+                if (audioSource != null && pickupSound != null)
+                    audioSource.PlayOneShot(pickupSound);
             }
         }
         else if (other.CompareTag("Hospital"))
@@ -56,7 +67,7 @@ public class GameManager : MonoBehaviour
                 soldiersInHelicopter = 0;
                 UpdateUI();
 
-                // Check win condition
+                // Win check
                 if (GameObject.FindGameObjectsWithTag("Soldier").Length == 0)
                 {
                     messageText.text = "YOU WIN!";
@@ -80,6 +91,7 @@ public class GameManager : MonoBehaviour
     void EndGame()
     {
         gameEnded = true;
+
         // Stop helicopter movement
         if (helicopter != null)
         {
@@ -93,7 +105,8 @@ public class GameManager : MonoBehaviour
                 rb.linearVelocity = Vector2.zero;
         }
     }
-    
+
+    // Optional for checking in helicopter script
     public bool GameEnded()
     {
         return gameEnded;
