@@ -15,11 +15,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Sound")]
     public AudioClip pickupSound;
-    private AudioSource audioSource;
+    public AudioSource backgroundMusicSource;
 
+    private AudioSource audioSource;
     private int soldiersInHelicopter = 0;
     private int soldiersRescued = 0;
-
     private bool gameEnded = false;
 
     void Start()
@@ -27,9 +27,16 @@ public class GameManager : MonoBehaviour
         UpdateUI();
         messageText.text = "";
 
-        // Get AudioSource from helicopter
+        // Helicopter AudioSource for pickup sound
         if (helicopter != null)
             audioSource = helicopter.GetComponent<AudioSource>();
+
+        // Play background music if assigned
+        if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
+        {
+            backgroundMusicSource.loop = true;
+            backgroundMusicSource.Play();
+        }
     }
 
     void Update()
@@ -41,10 +48,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Called from HelicopterCollisionForwarder
     public void HandleCollision(GameObject other)
     {
-        if (gameEnded) return; // Stop processing after game ends
+        if (gameEnded) return;
 
         if (other.CompareTag("Soldier"))
         {
@@ -99,14 +105,12 @@ public class GameManager : MonoBehaviour
             if (movement != null)
                 movement.enabled = false;
 
-            // Stop physics motion
             var rb = helicopter.GetComponent<Rigidbody2D>();
             if (rb != null)
                 rb.linearVelocity = Vector2.zero;
         }
     }
 
-    // Optional for checking in helicopter script
     public bool GameEnded()
     {
         return gameEnded;
