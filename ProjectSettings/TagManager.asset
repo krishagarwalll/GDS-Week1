@@ -2,8 +2,12 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Tree
+  - Soldier
+  - Hospital
+  - Helicopter
   layers:
   - Default
   - TransparentFX
@@ -41,3 +45,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 1912560297
+    locked: 0
+  - name: Obstacles
+    uniqueID: 823872161
+    locked: 0
+  - name: Helicopter
+    uniqueID: 4099378715
+    locked: 0
+  - name: UI
+    uniqueID: 2348632561
+    locked: 0
+  m_RenderingLayers:
+  - Default
