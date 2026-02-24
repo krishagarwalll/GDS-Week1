@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -17,6 +16,8 @@ public class GameManager : MonoBehaviour
     private int soldiersInHelicopter = 0;
     private int soldiersRescued = 0;
 
+    private bool gameEnded = false;
+
     void Start()
     {
         UpdateUI();
@@ -25,13 +26,18 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Reset game
+        // Reset game at any time
         if (Input.GetKeyDown(KeyCode.R))
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
+    // Called by HelicopterCollisionForwarder
     public void HandleCollision(GameObject other)
     {
+        if (gameEnded) return; // stop processing collisions after game ends
+
         if (other.CompareTag("Soldier"))
         {
             if (soldiersInHelicopter < maxCapacity)
@@ -39,7 +45,7 @@ public class GameManager : MonoBehaviour
                 soldiersInHelicopter++;
                 UpdateUI();
                 Destroy(other); // remove soldier
-                // Play pickup sound here
+                // Play pickup sound here if needed
             }
         }
         else if (other.CompareTag("Hospital"))
@@ -50,15 +56,18 @@ public class GameManager : MonoBehaviour
                 soldiersInHelicopter = 0;
                 UpdateUI();
 
-                // Win check
+                // Check win condition
                 if (GameObject.FindGameObjectsWithTag("Soldier").Length == 0)
+                {
                     messageText.text = "YOU WIN!";
+                    EndGame();
+                }
             }
         }
         else if (other.CompareTag("Tree"))
         {
             messageText.text = "GAME OVER";
-            helicopter.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+            EndGame();
         }
     }
 
@@ -66,5 +75,27 @@ public class GameManager : MonoBehaviour
     {
         soldiersInHelicopterText.text = "In Helicopter: " + soldiersInHelicopter;
         soldiersRescuedText.text = "Rescued: " + soldiersRescued;
+    }
+
+    void EndGame()
+    {
+        gameEnded = true;
+        // Stop helicopter movement
+        if (helicopter != null)
+        {
+            var movement = helicopter.GetComponent<HelicopterMovement>();
+            if (movement != null)
+                movement.enabled = false;
+
+            // Stop physics motion
+            var rb = helicopter.GetComponent<Rigidbody2D>();
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+        }
+    }
+    
+    public bool GameEnded()
+    {
+        return gameEnded;
     }
 }

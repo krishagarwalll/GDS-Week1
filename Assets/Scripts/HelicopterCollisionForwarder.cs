@@ -6,7 +6,7 @@ public class HelicopterCollisionForwarder : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Helicopter collided with: " + collision.name);
-        gameManager.HandleCollision(collision.gameObject);
+        if (gameManager != null)
+            gameManager.HandleCollision(collision.gameObject);
     }
 }
