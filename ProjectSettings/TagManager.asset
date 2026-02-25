@@ -8,6 +8,8 @@ TagManager:
   - Soldier
   - Hospital
   - Helicopter
+  - Cow
+  - Mothership
   layers:
   - Default
   - TransparentFX

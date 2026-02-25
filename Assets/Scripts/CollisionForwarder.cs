@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HelicopterCollisionForwarder : MonoBehaviour
+public class CollisionForwarder : MonoBehaviour
 {
     public GameManager gameManager;
 

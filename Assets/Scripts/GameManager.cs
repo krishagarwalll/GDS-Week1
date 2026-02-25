@@ -4,47 +4,47 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Helicopter")]
-    public GameObject helicopter;
+    [Header("Player")]
+    public GameObject player;
     public int maxCapacity = 3;
 
+    [Header("Tags")]
+    public string collectibleTag;
+    public string baseTag;
+    public string obstacleTag;
+
     [Header("UI")]
-    public TMP_Text soldiersInHelicopterText;
-    public TMP_Text soldiersRescuedText;
+    public TMP_Text inVehicleText;
+    public TMP_Text totalCollectedText;
     public TMP_Text messageText;
 
-    [Header("Sound")]
-    public AudioClip pickupSound;
-    public AudioSource backgroundMusicSource;
+    [Header("Text Labels")]
+    public string inVehicleLabel = "In Vehicle: ";
+    public string totalCollectedLabel = "Delivered: ";
+    public string winMessage = "YOU WIN!";
+    public string loseMessage = "GAME OVER";
 
-    private AudioSource audioSource;
-    private int soldiersInHelicopter = 0;
-    private int soldiersRescued = 0;
+    private int inVehicle = 0;
+    private int totalCollected = 0;
     private bool gameEnded = false;
 
     void Start()
     {
         UpdateUI();
-        messageText.text = "";
-
-        // Helicopter AudioSource for pickup sound
-        if (helicopter != null)
-            audioSource = helicopter.GetComponent<AudioSource>();
-
-        // Play background music if assigned
-        if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
-        {
-            backgroundMusicSource.loop = true;
-            backgroundMusicSource.Play();
-        }
+        if (messageText != null)
+            messageText.text = "";
     }
 
     void Update()
     {
-        // Reset game
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
@@ -52,67 +52,66 @@ public class GameManager : MonoBehaviour
     {
         if (gameEnded) return;
 
-        if (other.CompareTag("Soldier"))
+        if (other.CompareTag(collectibleTag))
         {
-            if (soldiersInHelicopter < maxCapacity)
+            if (inVehicle < maxCapacity)
             {
-                soldiersInHelicopter++;
+                inVehicle++;
                 UpdateUI();
                 Destroy(other);
-
-                // Play pickup sound
-                if (audioSource != null && pickupSound != null)
-                    audioSource.PlayOneShot(pickupSound);
             }
         }
-        else if (other.CompareTag("Hospital"))
+        else if (other.CompareTag(baseTag))
         {
-            if (soldiersInHelicopter > 0)
+            if (inVehicle > 0)
             {
-                soldiersRescued += soldiersInHelicopter;
-                soldiersInHelicopter = 0;
+                totalCollected += inVehicle;
+                inVehicle = 0;
                 UpdateUI();
 
-                // Win check
-                if (GameObject.FindGameObjectsWithTag("Soldier").Length == 0)
+                if (GameObject.FindGameObjectsWithTag(collectibleTag).Length == 0)
                 {
-                    messageText.text = "YOU WIN!";
+                    if (messageText != null)
+                        messageText.text = winMessage;
+
                     EndGame();
                 }
             }
         }
-        else if (other.CompareTag("Tree"))
+        else if (other.CompareTag(obstacleTag))
         {
-            messageText.text = "GAME OVER";
+            if (messageText != null)
+                messageText.text = loseMessage;
+
             EndGame();
         }
     }
 
     void UpdateUI()
     {
-        soldiersInHelicopterText.text = "In Helicopter: " + soldiersInHelicopter;
-        soldiersRescuedText.text = "Rescued: " + soldiersRescued;
+        if (inVehicleText != null)
+            inVehicleText.text = inVehicleLabel + inVehicle;
+
+        if (totalCollectedText != null)
+            totalCollectedText.text = totalCollectedLabel + totalCollected;
     }
 
     void EndGame()
     {
         gameEnded = true;
 
-        // Stop helicopter movement
-        if (helicopter != null)
+        if (player != null)
         {
-            var movement = helicopter.GetComponent<HelicopterMovement>();
-            if (movement != null)
-                movement.enabled = false;
+            // Disable ALL scripts on player
+            foreach (MonoBehaviour script in player.GetComponents<MonoBehaviour>())
+            {
+                if (script != this)
+                    script.enabled = false;
+            }
 
-            var rb = helicopter.GetComponent<Rigidbody2D>();
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
             if (rb != null)
                 rb.linearVelocity = Vector2.zero;
         }
-    }
-
-    public bool GameEnded()
-    {
-        return gameEnded;
     }
 }
